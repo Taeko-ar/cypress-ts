@@ -24,3 +24,5 @@ jobs:
         uses: cypress-io/github-action@v6
         with:
           command: npx cypress run
+        env:
+          CYPRESS_BASE_URL: https://example.cypress.io
