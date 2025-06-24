@@ -52,12 +52,10 @@ jobs:
         id: run-tests
         uses: cypress-io/github-action@v6
         with:
-          command: npx cypress run
+          command: npx cypress run --env grepTags="${{ github.event.inputs.grepTags_input || matrix.tags-and-groups.grepTags }}"
           install-command: npm install
         env:
           CYPRESS_BASE_URL: https://example.cypress.io
-          CYPRESS_GREP_TAGS: ${{ github.event.inputs.grepTags_input || matrix.tags-and-groups.grepTags }}
-          CYPRESS_GREP: ${{ github.event.inputs.grep_input || matrix.tags-and-groups.grep }}
 
       - name: 'Upload Cypress Artifacts (${{ matrix.tags-and-groups.name }})'
         uses: actions/upload-artifact@v4
