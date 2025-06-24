@@ -2,21 +2,21 @@
 
 This repository has the basic Cypress setup required and the introduction of Page object model.
 
-### Table of Contents
+## Table of Contents
 
-Cypress Configuration (cypress.config.ts)
+[Cypress Configuration](#cypress-configuration)
 
-Custom Cypress Command (cy.verify)
+[Custom Cypress Commands](#custom-cypress-commands)
 
-Page Object Model (POM) Structure
+[Page Object Model (POM) Structure](#page-object-model-pom-structure)
 
-Test File Structure
+[Test File Structure](#test-file-structure)
 
-1. Cypress Configuration
+### Cypress Configuration
 
 A `.env.shadow` file with the env variables used is available.
 
-2. Custom Cypress Command
+###  Custom Cypress Commands
 
 ```TS
 Cypress.Commands.add('verify', <T>(chainable: Cypress.Chainable<T>, ...assertion: any[]) => {
@@ -27,7 +27,7 @@ Cypress.Commands.add('verify', <T>(chainable: Cypress.Chainable<T>, ...assertion
 cy.verify(loginPage.emailField(), 'be.visible')
 ```
 
-3. Page Object Model (POM) Structure
+### Page Object Model (POM) Structure
 
 ```TS
 // cypress/pages/actionsPage.ts
@@ -43,7 +43,7 @@ class LoginPage {
 }
 ```
 
-6. Test File Structure
+### Test File Structure
 
 Write your tests using the POM and custom commands in cypress/e2e/.
 
