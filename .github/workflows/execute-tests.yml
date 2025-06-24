@@ -5,24 +5,65 @@ on:
     branches:
       - main
       - develop
+  pull_request:
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+    inputs:
+      grepTags_input:
+        description: 'Cypress grepTags filter (e.g., "@smoke", "@regression")'
+        required: false
+        default: ''
+      grep_input:
+        description: 'Cypress grep filter (text in test title)'
+        required: false
+        default: ''
 
 jobs:
-  cypress-run:
+  run-cypress:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        tags-and-groups:
+          - name: "Smoke Tests"
+            grepTags: "@smoke"
+            grep: ""
+          - name: "Regression Tests"
+            grepTags: "@regression"
+            grep: ""
+    outputs:
+      result: ${{ steps.run-tests.outcome }}
 
     steps:
-      - name: Checkout
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
+        with:
+          node-version: '20'
 
-      - name: Install dependencies
+      - name: Install Node Dependencies
         run: npm ci
 
-      - name: Run Cypress
+      - name: 'Run Cypress Tests: ${{ matrix.tags-and-groups.name }}'
+        id: run-tests
         uses: cypress-io/github-action@v6
         with:
           command: npx cypress run
+          install-command: npm install
         env:
           CYPRESS_BASE_URL: https://example.cypress.io
+          CYPRESS_GREP_TAGS: ${{ github.event.inputs.grepTags_input || matrix.tags-and-groups.grepTags }}
+          CYPRESS_GREP: ${{ github.event.inputs.grep_input || matrix.tags-and-groups.grep }}
+
+      - name: 'Upload Cypress Artifacts (${{ matrix.tags-and-groups.name }})'
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: "cypress-results-${{ github.sha }}"
+          path: |
+            cypress/videos
+            cypress/screenshots

@@ -14,4 +14,7 @@
 // ***********************************************************
 
 // Import commands.js using ES2015 syntax:
+// @ts-ignore
+import registerCypressGrep from '@cypress/grep'
+registerCypressGrep()
 import './commands'
